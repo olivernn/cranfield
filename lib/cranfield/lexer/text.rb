@@ -4,7 +4,7 @@ module Cranfield
       def self.call(state)
         loop do
           case state.next
-          when State::EOS
+          when nil
             return nil
           when "."
             return FieldName

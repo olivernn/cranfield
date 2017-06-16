@@ -2,11 +2,10 @@ module Cranfield
   module Lexer
     module Lexeme
       class Base
-        attr_reader :content, :position
+        attr_reader :content
 
-        def initialize(content, position)
+        def initialize(content)
           @content = content
-          @position = position
         end
       end
 

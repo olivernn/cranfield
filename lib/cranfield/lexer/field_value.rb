@@ -4,7 +4,7 @@ module Cranfield
       def self.call(state)
         state.consume_line
         case state.peek
-        when ".", State::EOS
+        when ".", nil
           state.emit(Lexeme::FieldValue)
           return Text
         else

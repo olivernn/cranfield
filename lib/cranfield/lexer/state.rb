@@ -4,38 +4,39 @@ require 'fiber'
 module Cranfield
   module Lexer
     class State
-      EOS = "EOS".freeze
 
       def initialize(source)
         @source = source
         @start = 0
         @position = -1
         @state = Lexer::Text
+        @buffer = ""
       end
 
       def consume_line
         loop do
           case self.next
-          when "\n", EOS
+          when "\n", nil
             break
           end
         end
       end
 
       def next
-        return EOS if position > source.size
-        self.position += 1
-        source[position]
+        source.getc.tap do |char|
+          buffer << char
+        end
       end
 
       def peek
-        return EOS if position > source.size
-        source[position + 1]
+        source.getc.tap do
+          source.seek(-1, IO::SEEK_CUR)
+        end
       end
 
       def emit(lexeme)
-        l = lexeme.new(slice, start)
-        self.start = self.position + 1
+        l = lexeme.new(slice)
+        buffer.clear
         Fiber.yield l
       end
 
@@ -56,7 +57,7 @@ module Cranfield
       end
 
       def slice
-        source[start..position]
+        buffer.clone
       end
 
       protected
@@ -65,7 +66,7 @@ module Cranfield
 
       private
 
-      attr_reader :source
+      attr_reader :source, :buffer
     end
   end
 end
