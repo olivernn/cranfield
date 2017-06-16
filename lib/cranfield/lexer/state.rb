@@ -1,17 +1,15 @@
 require 'strscan'
+require 'fiber'
 
 module Cranfield
   module Lexer
     class State
       EOS = "EOS".freeze
 
-      attr_reader :lexemes
-
       def initialize(source)
         @source = source
         @start = 0
         @position = -1
-        @lexemes = []
         @state = Lexer::Text
       end
 
@@ -36,13 +34,16 @@ module Cranfield
       end
 
       def emit(lexeme)
-        lexemes << lexeme.new(slice, start)
+        l = lexeme.new(slice, start)
         self.start = self.position + 1
+        Fiber.yield l
       end
 
       def run
-        while state do
-          step
+        Fiber.new do
+          while state do
+            step
+          end
         end
       end
 
