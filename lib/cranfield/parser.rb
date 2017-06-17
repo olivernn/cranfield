@@ -1,21 +1,20 @@
-module Cranfield
-  class Parser
-    def initialize(io)
-      @io = io
-    end
+require 'cranfield/parser/state'
+require 'cranfield/parser/field_name'
+require 'cranfield/parser/field_value'
 
-    def documents
-      Enumerator.new do |y|
-      end
+module Cranfield
+  module Parser
+    def self.parse(source)
+      lexer = Lexer.lex(source)
+      State.new(lexer).run
     end
   end
 end
 
 __END__
 
-Cranfield.load(some_path)
 
-Cranfield::Parser.new(io)
+lexeme = fiber.resume
+parser(
 
-parser.documents.each do |document|
-end
+
