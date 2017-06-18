@@ -14,6 +14,16 @@ module Cranfield
       @bibliography = attrs.fetch(:bibliography)
     end
 
+    def to_h
+      {
+        id: id,
+        title: title,
+        author: author,
+        abstract: abstract,
+        bibliography: bibliography,
+      }
+    end
+
     def self.load(pathname)
       Enumerator.new do |y|
         File.open(pathname) do |source|
