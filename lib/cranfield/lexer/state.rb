@@ -24,7 +24,7 @@ module Cranfield
 
       def next
         source.getc.tap do |char|
-          buffer << char
+          buffer << char unless char.nil?
         end
       end
 
@@ -45,6 +45,8 @@ module Cranfield
           while state do
             step
           end
+
+          Fiber.yield Lexer::Lexeme::EOS
         end
       end
 

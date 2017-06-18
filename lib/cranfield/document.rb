@@ -14,5 +14,18 @@ module Cranfield
       @bibliography = attrs.fetch(:bibliography)
     end
 
+    def self.load(pathname)
+      Enumerator.new do |y|
+        File.open(pathname) do |source|
+          parser = Parser.parse(source)
+
+          loop do
+            document = parser.resume
+            break if document == :eos
+            y << document
+          end
+        end
+      end
+    end
   end
 end

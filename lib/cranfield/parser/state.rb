@@ -13,7 +13,8 @@ module Cranfield
 
       def field=(field_name)
         if fields.include? field_name
-          fail "Duplicate field #{field_name} already in #{fields}"
+          puts self.inspect
+          fail "Duplicate field '#{field_name}'"
         end
 
         self.current_field = field_name
@@ -40,11 +41,16 @@ module Cranfield
           while state do
             step
           end
+          Fiber.yield :eos
         end
       end
 
       def step
         self.state = state.call(lexer.resume, self)
+      end
+
+      def inspect
+        "Parser::State[attributes=#{attributes} current_field=#{current_field} state=#{state}]"
       end
 
       protected

@@ -2,6 +2,8 @@ module Cranfield
   module Parser
     module FieldValue
       def self.call(lexeme, state)
+        return nil if lexeme == Lexer::Lexeme::EOS
+
         unless Lexer::Lexeme::FieldValue === lexeme
           fail "unexpected lexeme, expected value, found #{lexeme}"
         end
